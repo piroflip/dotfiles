@@ -7,17 +7,10 @@ call vundle#rc()
 " let Vundle manage Vundle
 " required! 
 Bundle 'gmarik/vundle'
+Bundle 'gscrooloose/nerdtree'
 "
 " Colorschemes
-Bundle 'mutewinter/ir_black_mod'
 Bundle 'tomasr/molokai'
-Bundle 'cschlueter/vim-wombat'
-Bundle 'github.vim'
-Bundle 'proton.vim'
-Bundle '29decibel/codeschool-vim-theme'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'jpo/vim-railscasts-theme'
-Bundle 'chriskempson/base16-vim'
 "
 " Some basic stuff everyone need
 syntax enable
@@ -66,7 +59,7 @@ set t_Co=256
 colorscheme molokai
 
 map <F2> :w<CR>
-nmap <F3> :e .<CR>
+nmap <F3> :NERDTreeToggle<CR>
 
 " Switching between buffers
 map gn :bn<CR>
