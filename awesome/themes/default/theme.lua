@@ -94,5 +94,11 @@ theme.awesome_icon = "/usr/share/awesome/icons/awesome16.png"
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.
 theme.icon_theme = nil
 
+-- {{{ Widgets
+theme.widget_mail = "/home/piroflip/.config/awesome/themes/default/widgets/mail.png"
+-- }}}
+
+
+
 return theme
 -- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80

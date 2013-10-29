@@ -139,6 +139,20 @@ space:set_text(" ")
 
 -- }}}
 
+-- {{{ Start Gmail
+mailwidget = wibox.widget.textbox()
+-- gmailicon = wibox.widget.textbox()
+-- gmailicon:set_text(" ✉ ")
+gmailicon = wibox.widget.imagebox(beautiful.widget_mail)
+gmail_t = awful.tooltip({ objects = { mailwidget },})
+vicious.register(mailwidget, vicious.widgets.gmail,
+        function (widget, args)
+        gmail_t:set_text(args["{subject}"])
+--        gmail_t:add_to_object(mailicon)
+            return args["{count}"]
+                 end, 120)
+-- End Gmail }}}
+
 
 -- Create a textclock widget
 mytextclock = awful.widget.textclock()
@@ -212,6 +226,8 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(gmailicon)
+    right_layout:add(mailwidget)
     right_layout:add(space)
     right_layout:add(wifi)
     right_layout:add(space)
