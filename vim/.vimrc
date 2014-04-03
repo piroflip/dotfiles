@@ -29,10 +29,21 @@ call neobundle#rc(expand($HOME.'/.vim/bundle/'))
 " is better if NeoBundle rules NeoBundle (needed!)
 NeoBundle 'Shougo/neobundle.vim'
 " }}}
+
+NeoBundle 'vcscommand.vim'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'Shougo/unite.vim'
 "
+" Vimproc to asynchronously run commands (NeoBundle, Unite)
+NeoBundle 'Shougo/vimproc', {
+      \ 'build' : {
+      \     'windows' : 'make -f make_mingw32.mak',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make -f make_mac.mak',
+      \     'unix' : 'make -f make_unix.mak',
+      \    },
+      \ }
 " Colorschemes
 NeoBundle 'tomasr/molokai'
 "
@@ -225,7 +236,7 @@ endfun
 " }}}
 " Quick editing ----------------------------------------------------------- {{{
 
-nnoremap <leader>ev :vsplit ~/.vimrc<cr>
+nnoremap <leader>ev ~/.vimrc<cr>
 nnoremap <leader>et :vsplit ~/.tmux.conf<cr>
 
 " }}}
@@ -402,7 +413,9 @@ let g:airline#extensions#hunks#non_zero_only = 1
 " Unite {{{
 let g:unite_source_history_yank_enable = 1
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
-nnoremap <space>s :Unite -quick-match buffer<cr>
+nnoremap <leader>b :Unite -quick-match buffer<cr>
+nnoremap <leader>* :UniteWithCursorWord grep:.<cr>
+nnoremap <leader>/ :Unite grep:.<cr>
 " }}}
 
 
