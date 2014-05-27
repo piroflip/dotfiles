@@ -236,7 +236,7 @@ endfun
 " }}}
 " Quick editing ----------------------------------------------------------- {{{
 
-nnoremap <leader>ev ~/.vimrc<cr>
+nnoremap <leader>ev :edit ~/.vimrc<cr>
 nnoremap <leader>et :vsplit ~/.tmux.conf<cr>
 
 " }}}
