@@ -5,7 +5,7 @@ set shell=/bin/bash
 set nocompatible               " be iMproved
 
 " }}}
-" Neobundle Plugins ---------------------------------------------------------- {{{
+" Neobundle Plugins ------------------------------------------------------- {{{
 " NeoBundle auto-installation and setup {{{
 
 " Auto installing NeoBundle
@@ -24,7 +24,7 @@ endif
 if has('vim_starting')
     set rtp+=$HOME/.vim/bundle/neobundle.vim/
 endif
-call neobundle#rc(expand($HOME.'/.vim/bundle/'))
+call neobundle#begin(expand($HOME.'/.vim/bundle/'))
 
 " is better if NeoBundle rules NeoBundle (needed!)
 NeoBundle 'Shougo/neobundle.vim'
@@ -34,6 +34,11 @@ NeoBundle 'vcscommand.vim'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'Shougo/unite.vim'
+" File explorer (needed where ranger is not available)
+NeoBundleLazy 'Shougo/vimfiler', {'autoload' : { 'commands' : ['VimFiler']}}
+NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources': ['file_mru', 'directory_mru']}}
+" Autocompletion
+NeoBundle 'Shougo/neocomplete.vim'
 "
 " Vimproc to asynchronously run commands (NeoBundle, Unite)
 NeoBundle 'Shougo/vimproc', {
@@ -46,6 +51,7 @@ NeoBundle 'Shougo/vimproc', {
       \ }
 " Colorschemes
 NeoBundle 'tomasr/molokai'
+NeoBundle 'joedicastro/vim-molokai256'
 "
 
 " Auto install the plugins {{{
@@ -56,6 +62,8 @@ if iCanHazNeoBundle == 0
     echo ""
     :NeoBundleInstall
 endif
+
+call neobundle#end()
 
 " Check if all of the plugins are already installed, in other case ask if we
 " want to install them (useful to add plugins in the .vimrc)
@@ -185,7 +193,7 @@ set term=screen-256color
 syntax on
 set background=dark
 set t_Co=256
-colorscheme molokai
+colorscheme molokai256
 
 " Highlight VCS conflict markers
 match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
@@ -199,6 +207,7 @@ noremap  <F1> :checktime<cr>
 inoremap <F1> <esc>:checktime<cr>
 
 map <F2> :w<CR>
+nnoremap <F9> :make<CR>
 
 " Switching between buffers
 map gn :bn<CR>
@@ -212,8 +221,12 @@ imap jj <Esc>
 " Clean trailing whitespace
 nnoremap <leader>ww mz:%s/\s\+$//<cr>:let @/=''<cr>`z
 
+" Toggle the search results highlighting {{{
+map <silent><leader>hl :set invhlsearch<CR>
+" }}}
+
 " Panic Button
-nnoremap <f9> mzggg?G`z
+" nnoremap <f9> mzggg?G`z
 
 " Toggle [i]nvisible characters
 nnoremap <leader>i :set list!<cr>
@@ -236,7 +249,8 @@ endfun
 " }}}
 " Quick editing ----------------------------------------------------------- {{{
 
-nnoremap <leader>ev :edit ~/.vimrc<cr>
+nnoremap <leader>ev :e ~/.vimrc<cr>
+nnoremap <leader>ea :e ~/.config/awesome/rc.lua<cr>
 nnoremap <leader>et :vsplit ~/.tmux.conf<cr>
 
 " }}}
@@ -337,6 +351,9 @@ function! MyFoldText() " {{{
 endfunction " }}}
 set foldtext=MyFoldText()
 
+" do not fold diff
+set diffopt+=context:99999
+
 " }}}
 " Filetype-specific ------------------------------------------------------- {{{
 
@@ -344,7 +361,10 @@ set foldtext=MyFoldText()
 
 augroup ft_c
     au!
-"    au FileType c setlocal foldmethod=marker foldmarker={,}
+    " au FileType c setlocal foldmethod=syntax
+    " au FileType c setlocal foldlevelstart=99
+    " au FileType c setlocal foldlevel=99
+    "marker foldmarker={,}
 augroup END
 
 " }}}
@@ -401,7 +421,7 @@ set noshowmode
 
 let g:airline_theme='powerlineish'
 let g:airline_enable_branch=1
-let g:airline_powerline_fonts=1
+let g:airline_powerline_fonts=0
 let g:airline_detect_whitespace = 1
 let g:airline#extensions#hunks#non_zero_only = 1
 
@@ -417,7 +437,60 @@ nnoremap <leader>b :Unite -quick-match buffer<cr>
 nnoremap <leader>* :UniteWithCursorWord grep:.<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 " }}}
+" Neocomplete {{{
 
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#enable_refresh_always = 1
+let g:neocomplete#max_list = 30
+let g:neocomplete#min_keyword_length = 1
+let g:neocomplete#sources#syntax#min_keyword_length = 1
+let g:neocomplete#data_directory = $HOME.'/.vim/tmp/neocomplete'
+
+" disable the auto select feature by default to speed up writing without
+" obstacles (is optimal for certain situations)
+let g:neocomplete#enable_auto_select = 0
+
+" toggle the auto select feature
+function! ToggleNeoComplete()
+  if !g:neocomplete#disable_auto_complete && g:neocomplete#enable_auto_select
+      let g:neocomplete#disable_auto_complete = 0
+      let g:neocomplete#enable_auto_select = 0
+  elseif !g:neocomplete#disable_auto_complete && !g:neocomplete#enable_auto_select
+      let g:neocomplete#disable_auto_complete = 1
+      let g:neocomplete#enable_auto_select = 0
+  elseif g:neocomplete#disable_auto_complete && !g:neocomplete#enable_auto_select
+      let g:neocomplete#disable_auto_complete = 0
+      let g:neocomplete#enable_auto_select = 1
+  endif
+endfunction
+nnoremap <silent><Leader>en :call ToggleNeoComplete()<CR>
+" <TAB>: completion.
+" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplete#close_popup() . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+if !exists('g:neocomplete#sources#omni#input_patterns')
+    let g:neocomplete#sources#omni#input_patterns = {}
+endif
+
+let g:neocomplete#sources#omni#input_patterns.python='[^. \t]\.\w*'
+
+" }}}
 
 " }}}
 
