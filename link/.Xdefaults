@@ -1,0 +1,21 @@
+Xft.dpi: 96
+Xft.antialias: true
+Xft.hinting: true
+Xft.rgba: rgb
+Xft.autohint: false
+Xft.hintstyle: hintfull
+Xft.lcdfilter: lcddefault
+Xft.background: #cccccc
+
+URxvt*font:             xft:Terminus:size=18
+URxvt*boldFont:         xft:Terminus:size=18:bold
+
+URxvt*background:       Black
+URxvt*foreground:       White
+URxvt*termName:         screen-256color
+URxvt*geometry:         240x84
+URxvt*urlLauncher:      firefox
+URxvt*scrollBar:        false
+URxvt*scrollBar_right:  true
+URxvt*scrollColor:      #000000
+!URxvt.letterSpace:      -2
