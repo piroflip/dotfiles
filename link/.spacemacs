@@ -25,7 +25,7 @@
      ;; org
      lua
      dash
-     syntax-checking
+     ;;syntax-checking
      c-c++
      themes-megapack
      )
@@ -37,7 +37,10 @@
    dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
-  "Initialization function.
+  "Ini
+
+
+tialization function.
 This function is called at the very startup of Spacemacs initialization
 before layers configuration."
   ;; This setq-default sexp is an exhaustive list of all the supported
@@ -63,7 +66,7 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(molokai
+   dotspacemacs-themes '(monokai
                          solarized-light
                          solarized-dark
                          leuven
@@ -74,8 +77,8 @@ before layers configuration."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+   dotspacemacs-default-font '("Terminus"
+                               :size 20
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -140,6 +143,8 @@ before layers configuration."
    dotspacemacs-default-package-repository nil
    )
   ;; User initialization goes here
+   (setq-default evil-escape-key-sequence "jj")
+   (setq-default git-enable-magit-svn-plugin t)
   )
 
 (defun dotspacemacs/config ()
@@ -147,7 +152,6 @@ before layers configuration."
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
    (setq powerline-default-separator nil)
-   ;;(setq-default evil-escape-key-sequence "jk")
    (setq-default evil-escape-delay 0.5)
    (prefer-coding-system 'cp866)
 
