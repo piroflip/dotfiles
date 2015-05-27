@@ -425,7 +425,7 @@ awful.rules.rules = {
                      maximized_vertical   = true } },
 
     { rule = { class = "Firefox" },
-      properties = { tag = tags[1][8], floating = true } },
+      properties = { tag = tags[1][8] } },
 
     { rule = { class = "Firefox" , instance = "DTA" },
       properties = { tag = tags[1][8], floating = true } },
