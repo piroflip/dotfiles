@@ -143,7 +143,7 @@ before layers configuration."
    dotspacemacs-default-package-repository nil
    )
   ;; User initialization goes here
-   (setq-default evil-escape-key-sequence "jj")
+  ;; (setq-default evil-escape-key-sequence "jj")
    (setq-default git-enable-magit-svn-plugin t)
   )
 
@@ -178,6 +178,12 @@ layers configuration."
    )
 
    (add-hook 'c-mode-common-hook 'piroflip-c-mode-common-hook)
+
+   ;; Centre screen around a search
+   (defadvice evil-search-next
+    (after advice-for-evil-search-next activate)
+    (evil-scroll-line-to-center (line-number-at-pos)))
+
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
