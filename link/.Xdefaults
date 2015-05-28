@@ -3,8 +3,8 @@ Xft.antialias: true
 Xft.hinting: true
 Xft.rgba: rgb
 Xft.autohint: false
-Xft.hintstyle: hintfull
-Xft.lcdfilter: lcddefault
+Xft.hintstyle: hintslight
+!Xft.lcdfilter: lcddefault
 Xft.background: #cccccc
 
 URxvt*font:             xft:Terminus:size=18

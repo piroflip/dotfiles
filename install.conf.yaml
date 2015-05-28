@@ -1,11 +1,11 @@
-- clean: ['~']
+- clean: ['~', '~/.config']
 
 - link:
     ~/.tmux.conf: link/.tmux.conf
     ~/.spacemacs: link/.spacemacs
     ~/.Xdefaults: link/.Xdefaults
     ~/.xinitrc: link/.xinitrc
-    ~/.config/awesome :
+    ~/.config/awesome:
       create: true
       path: link/.config/awesome
 
