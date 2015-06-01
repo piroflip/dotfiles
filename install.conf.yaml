@@ -5,7 +5,13 @@
     ~/.spacemacs: link/.spacemacs
     ~/.Xdefaults: link/.Xdefaults
     ~/.xinitrc: link/.xinitrc
-    ~/.config/awesome:
+    ~/.config/bspwm:
       create: true
-      path: link/.config/awesome
+      path: link/.config/bspwm
+    ~/.config/sxhkd:
+      create: true
+      path: link/.config/sxhkd
+    ~/.config/qutebrowser:
+      create: true
+      path: link/.config/qutebrowser
 
