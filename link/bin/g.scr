@@ -1,0 +1,13 @@
+define print_tx_status0
+
+set $kb = ((wlportinfo*)ports[0].pt_lanport->lpt_wlport)->wlp_tx_ring->rni_kbring
+set $i     = 0
+while ($i<4096)
+#  if ($kb[$i].kb_tph->tph_status != 0)
+    p $kb[$i].kb_tph->tph_status
+#  end
+  set $i++
+end
+
+end
+

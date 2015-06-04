@@ -83,11 +83,15 @@ super + @button{1-3}
 super + Return
 	urxvtc
 
+super + shift + Return
+	urxvtc -e "t.sh"
+
+
 super + y
 	slimlock
 
 super + {space,r}
-	{dmenu_run,lighthouse}
+	{dmenu_run,dmenu_bind.sh}
 
 ctrl + alt + Delete
     urxvtc -e htop

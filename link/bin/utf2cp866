@@ -1,0 +1,13 @@
+#!/bin/sh
+
+targetdir=${1}
+
+if [ ! -d "${targetdir}" ] ; then
+	echo "Aborting.  '${targetdir}' is not a directory."
+	exit 1
+fi
+
+for i in ${targetdir}/*.* ; do
+	[ -d "${i}" ] && echo "Ignoring subdirectory ${i}" && continue
+	iconv -t CP866 -f UTF-8 ${i} > ${i}.1; mv ${i}.1 ${i}
+done

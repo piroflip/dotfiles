@@ -1,0 +1,18 @@
+#!/bin/sh
+
+targetdir=${1}
+
+if [ -f "${targetdir}" ] ; then
+	exit 0
+	awk '{sub(/\r$/,"");print}' ${targetdir} > ${targetdir}.1; mv ${targetdir}.1 ${targetdir}
+fi
+
+if [ ! -d "${targetdir}" ] ; then
+	echo "Aborting.  '${targetdir}' is not a directory."
+	exit 1
+fi
+
+for i in ${targetdir}/*.* ; do
+	[ -d "${i}" ] && echo "Ignoring subdirectory ${i}" && continue
+	awk '{sub(/\r$/,"");print}' ${i} > ${i}.1; mv ${i}.1 ${i}
+done

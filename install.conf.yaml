@@ -14,4 +14,7 @@
     ~/.config/qutebrowser:
       create: true
       path: link/.config/qutebrowser
+    ~/bin:
+      create: true
+      path: link/bin
 

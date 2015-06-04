@@ -1,0 +1,82 @@
+#!/bin/sh
+#
+# January 22, 1998
+#
+# Some ideas borrowed from the Tips-HOWTO. Modifications by BJ Goodwin
+# <latency@radiolink.net>.
+#
+# Copyleft 1998
+# All Beers Consumed.
+#
+if [ ! $1 ]; then
+        echo "Not enough arguments. Try $0 -h for options."
+        exit 1
+fi
+if [ $1 = "-f" -o $1 = "-d" -o $1 = "-a" -o $1 = "-h" ]; then
+        :
+   else
+        echo "$0: Invalid argument. Try $0 -h for help."
+        exit 1
+fi
+if [ $1 = "-f" ]; then
+   for x in `ls`
+     do
+        if [ ! -f $x ]; then
+                continue
+        fi
+
+     convert=`echo $x | tr '[A-Z]' '[a-z]'`
+
+        if [ $convert != $x ]; then
+                mv -i $x $convert
+        fi
+     done
+   exit
+fi
+if [ $1 = "-d" ]; then
+   for x in `ls`
+     do
+        if [ ! -d $x ]; then
+                continue
+        fi
+
+     convert=`echo $x | tr '[A-Z]' '[a-z]'`
+
+        if [ $convert != $x ]; then
+                mv -i $x $convert
+        fi
+     done
+   exit
+fi
+if [ $1 = "-a" ]; then
+   for x in `ls`
+     do
+        if [ -f $x -a -d $x ]; then
+                continue
+        fi
+
+     convert=`echo $x | tr '[A-Z]' '[a-z]'`
+
+        if [ $convert != $x ]; then
+                mv -i $x $convert
+        fi
+     done
+   exit
+fi
+if [ $1 = "-h" ]; then
+        echo "-----------------------------------------------------------"
+        echo "lowercase v1.0 - Convert files or directories to lowercase."
+        echo "-----------------------------------------------------------"
+        echo "Usage: $0 <option>"
+        echo
+        echo "Options:"
+        echo " -f = All files in current directory."
+        echo " -d = All directories in current directory."
+        echo " -a = All files AND directories in current directory."
+        echo " -h = This help screen."
+        echo
+        echo "Notes: If a lowercase directory already exists that has the same"
+        echo " name as the uppercase directory, the uppercase will be"
+        echo " MOVED to the lowercase directory without confirmation."
+        exit
+fi

@@ -1,0 +1,246 @@
+#Example for cliw traversal
+
+define print_cliw_lock
+
+set $cliw = crkinfo->cri_firstclient
+
+set $clientnum = 1
+
+while ($cliw->cw_view->cvi_nextview != 0)
+  #if ($cliw->cw_nat.cni_lock->rwl_lock.__data.__writer !=0)
+  #  p $cliw->cw_nat.cni_lock
+  #end
+  set $cliw = $cliw->cw_view->cvi_nextview
+  set $clientnum++
+end
+p $clientnum
+
+end
+
+document print_cliw_lock
+
+p_gslist_str: Dumps the lock in active clients
+
+end
+
+
+define print_gate_lock
+
+set $gate = ports[1].pt_gate->pg_gate
+set $i     = 0
+while ($i<1024)
+#  if ($gate->gaw_lock->rwl_lock.__data.__nr_readers_queued !=0)
+    p *$gate
+#  end
+  set $gate = $gate + 1
+  set $i++
+end
+
+end
+
+
+define print_guard_lock
+
+set $guard = ports[0]->pt_guard->gp_guard
+
+while ($guard->gw_nextguardenable)
+#  if ($guard->gw_lock->rwl_lock.__data.__writer !=0)
+    p $guard->gw_lastticksend
+#  end
+  set $guard = $guard + 1
+end
+
+end
+
+
+define print_proxy_lock
+
+set $px = (proxyctrltype*)proxyallocmem
+set $i  = 0
+
+while ($i<32768)
+  if ($px->px_lasttime == 0)
+    p *$px
+  end
+  set $px = $px + 1
+  set $i  = $i  + 1
+end
+
+end
+
+
+define print_hlock
+
+set $numh=0
+
+while ($numh < 0x10000)
+  if (clisysinfo->csi_hlock[$numh].rwl_lock.__data.__nr_readers != 0)
+    p clisysinfo->csi_hlock[$numh]
+  end
+  if (clisysinfo->csi_hlock[$numh].rwl_lock.__data.__writer != 0)
+    p clisysinfo->csi_hlock[$numh]
+  end
+
+  set $numh = $numh + 1
+end
+
+p $numh
+
+end
+
+define scan_cliw_hash
+
+set $numh=0
+set $numcliwh = 0
+
+while ($numh < 0x10000)
+  if (clisysinfo->csi_harray[$numh])
+    set $numcliwh = $numcliwh +1
+    set $cliw = clisysinfo->csi_harray[$numh]
+    if ($cliw->cw_nat->cni_next)
+      set $numcliwh = $numcliwh +1
+    end
+    if ($cliw->cw_nat->cni_prev)
+      set $numcliwh = $numcliwh +1
+    end
+    set $numh = $numh + 1
+  else
+    set $numh = $numh + 1
+  end
+end
+  p $numcliwh
+  
+end
+
+
+define scan_all_cliw
+
+set $crknum=0
+set $numclients=0
+
+set $crkw   =crkinfo->cri_crkwork
+
+while ($crknum < 10)
+  set $clinum = 0
+  set $cliw = $crkw->crw_client
+  while ($clinum < 1024)
+
+#    if ($cliw->cw_lock.rwl_lock.__data.__nr_readers != 0)
+#      p $cliw->cw_lock
+#    end
+#    if ($cliw->cw_lock.rwl_lock.__data.__writer != 0)
+#      p $cliw->cw_lock
+#    end
+
+#    if ($cliw->cw_nat->cni_added == 1)
+      #p *$cliw
+#      set $numclients = $numclients + 1
+#    end
+
+    if ($cliw->cw_view->cvi_ftimeconnect != 0)
+      p $cliw->cw_view->cvi_ftimeconnect
+      set $numclients = $numclients + 1
+    end
+
+    set $cliw = $cliw + 1
+    set $clinum = $clinum + 1
+  end
+
+  #p $numclients
+  set $crkw = $crkw + 1
+  set $crknum = $crknum + 1
+end
+
+end
+
+define scan_frinfo
+
+set $numh = 0 
+
+while ($numh < 0x10000)
+  if (((ipinfotype*)(ports[0]->pt_ipwork))->ipt_fraginfo->ipf_hash.frh_lock[$numh].rwl_lock.__data.__writer !=0)
+    p ((ipinfotype*)(ports[0]->pt_ipwork))->ipt_fraginfo->ipf_hash.frh_lock[$numh]
+  end
+  set $numh++ 
+end
+
+p $numh
+
+end
+
+
+define find_user
+
+set $i = 0
+set $user = ((portusertype *)ports[0].pt_user)->pu_userptr
+
+while ($i < 8192)
+  if ($user->ua_rping[0])
+    p $user
+  end
+  if ($user->ua_rping[1])
+    p $user
+  end
+
+  if ($user->ua_rtelnet[0])
+    p $user
+  end
+  if ($user->ua_rtelnet[1])
+    p $user
+  end
+  
+  if ($user->ua_rsnmp[0])
+    p $user
+  end
+  if ($user->ua_rsnmp[1])
+    p $user
+  end
+
+  if ($user->ua_rhttp[0])
+    p $user
+  end
+  if ($user->ua_rhttp[1])
+    p $user
+  end
+
+  set $i++
+  set $user++
+end
+
+set $i = 0
+set $user = ((portusertype *)ports[1].pt_user)->pu_userptr
+
+while ($i < 8192)
+  if ($user->ua_rping[0])
+    p $user
+  end
+  if ($user->ua_rping[1])
+    p $user
+  end
+
+  if ($user->ua_rtelnet[0])
+    p $user
+  end
+  if ($user->ua_rtelnet[1])
+    p $user
+  end
+  
+  if ($user->ua_rsnmp[0])
+    p $user
+  end
+  if ($user->ua_rsnmp[1])
+    p $user
+  end
+
+  if ($user->ua_rhttp[0])
+    p $user
+  end
+  if ($user->ua_rhttp[1])
+    p $user
+  end
+
+  set $i++
+  set $user++
+end
+
+end

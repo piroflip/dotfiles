@@ -1,0 +1,18 @@
+#!/bin/sh
+
+targetdir=${1}
+
+if [ -f "${targetdir}" ] ; then
+	iconv -f CP866 -t UTF-8 ${targetdir} > ${targetdir}.1; mv ${targetdir}.1 ${targetdir}
+	exit 0
+fi
+
+if [ ! -d "${targetdir}" ] ; then
+	echo "Aborting.  '${targetdir}' is not a directory."
+	exit 1
+fi
+
+for i in ${targetdir}/*.* ; do
+	[ -d "${i}" ] && echo "Ignoring subdirectory ${i}" && continue
+	iconv -f CP866 -t UTF-8 ${i} > ${i}.1; mv ${i}.1 ${i}
+done

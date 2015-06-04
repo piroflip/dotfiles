@@ -1,0 +1,2 @@
+
+LC_ALL=ru_RU.CP1251 sudo wine "/home/piroflip/.wine/drive_c/Program Files/AMICON/Wradm/wradm.exe" debug
