@@ -4,7 +4,9 @@
     ~/.tmux.conf: link/.tmux.conf
     ~/.spacemacs: link/.spacemacs
     ~/.Xdefaults: link/.Xdefaults
-    ~/.xinitrc: link/.xinitrc
+    ~/.xinitrc:   link/.xinitrc
+    ~/.bashrc:    link/.bashrc
+    ~/.profile:   link/.profile
     ~/.config/bspwm:
       create: true
       path: link/.config/bspwm
@@ -14,6 +16,9 @@
     ~/.config/qutebrowser:
       create: true
       path: link/.config/qutebrowser
+    ~/.config/bash:
+      create: true
+      path: link/.config/bash
     ~/bin:
       create: true
       path: link/bin
