@@ -19,3 +19,16 @@ URxvt*scrollBar:        false
 URxvt*scrollBar_right:  true
 URxvt*scrollColor:      #000000
 !URxvt.letterSpace:      -2
+!
+
+URxvt.perl-ext-common: default,clipboard
+URxvt.iso14755: False
+
+URxvt.keysym.Shift-Control-C: perl:clipboard:copy
+URxvt.keysym.Shift-Control-V: perl:clipboard:paste
+
+URxvt.clipboard.copycmd:  xsel -ib
+URxvt.clipboard.pastecmd: xsel -ob
+
+URxvt.intensityStyles: false
+

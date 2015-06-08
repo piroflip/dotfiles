@@ -86,12 +86,14 @@ super + Return
 super + shift + Return
 	urxvtc -e "t.sh"
 
+super + e
+	firefox
 
 super + y
 	slimlock
 
-super + {space,r}
-	{dmenu_run,dmenu_bind.sh}
+super + r
+	dmenu_bind.sh
 
 ctrl + alt + Delete
     urxvtc -e htop

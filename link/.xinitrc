@@ -10,6 +10,6 @@ xsetroot -cursor_name left_ptr
 xset +fp /usr/share/fonts/local
 nitrogen --restore &
 urxvtd -q -f -o &
-qutebrowser &
+firefox &
 sxhkd &
 exec bspwm &>~/bspwm.log

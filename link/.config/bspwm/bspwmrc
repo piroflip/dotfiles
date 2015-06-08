@@ -10,9 +10,10 @@ bspc config focus_by_distance   true
 
 bspc monitor -d 1 2 3 4 5 6 7 8 9
 
-bspc rule -a Firefox desktop=^7
-bspc rule -a qutebrowser desktop=^8
+bspc rule -a Firefox desktop=^8
+bspc rule -a qutebrowser desktop=^7
 bspc rule -a feh floating=on
 bspc rule -a pavucontrol floating=on
+bspc rule -a nitrogen floating=on center=true
 
  ${HOME}/.config/bspwm/panel
