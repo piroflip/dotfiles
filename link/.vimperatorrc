@@ -1,0 +1,30 @@
+set gui=none,tabs
+
+set focuscontent
+
+nnoremap J :tabprevious<cr>
+nnoremap K :tabnext<cr>
+
+nnoremap j 3j
+nnoremap k 3k
+
+" Reload .vimperatorrc
+nnoremap <C-R> :source ~/.vimperatorrc<cr>
+
+set defsearch=google
+set hintchars=jfkdhglsa
+" no sound
+set! ui.key.generalAccessKey=0
+" set! ui.caretWidth=2
+
+
+" ==============================
+" Default qmarks {{{
+" ==============================
+" rule: lowercase letters are reserved for default marks
+qmark m https://mail.google.com/
+qmark f https://www.facebook.com/
+qmark g https://github.com/
+qmark h https://news.ycombinator.com/
+" }}}
+" ==============================
