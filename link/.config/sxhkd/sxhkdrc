@@ -92,6 +92,9 @@ super + e
 super + y
 	slimlock
 
+super + x
+	urxvtc -e ranger
+
 super + r
 	dmenu_bind.sh
 

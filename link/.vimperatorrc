@@ -8,6 +8,11 @@ nnoremap K :tabnext<cr>
 nnoremap j 3j
 nnoremap k 3k
 
+
+" youtube shortcuts
+nnoremap ,yp :stpause<cr>
+nnoremap ,yr :stplay<cr>
+
 " Reload .vimperatorrc
 nnoremap <C-R> :source ~/.vimperatorrc<cr>
 
