@@ -1,0 +1,2 @@
+alias c="make clean"
+alias m="make"

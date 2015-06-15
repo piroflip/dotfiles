@@ -1,0 +1,178 @@
+#!/bin/bash
+
+echo() { printf '%s\n' "$*"; }
+msg() { printf '%s\n' "$*"; }
+err() { printf '%s\n' "$*" >&2; }
+
+set_title() { printf '\033]0;%s\007' "$1"; }
+
+trap_error() { err "The command has returned a non-zero exit code ($?)."; }
+
+x() { exec xinit -- -nolisten tcp vt9; }
+
+is_coreutils() {
+	declare out
+	out=$( df --version 2>/dev/null )
+
+	(( $? )) && {
+		err 'df --version exited with an error. This is not GNU coreutils'
+		return 3
+	}
+
+	[[ "$out" =~ 'GNU coreutils' ]] || {
+		err 'Version output does not contain "GNU coreutils". This is not GNU coreutils.'
+		return 1
+	}
+}
+
+if is_coreutils; then
+	ls() { $(type -P ls) -l -hb --group-directories-first --color=auto "$@"; }
+	mv() { $(type -P mv) -v "$@"; }
+	cp() { $(type -P cp) -v "$@"; }
+	rm() { $(type -P rm) -v "$@"; }
+fi
+
+fuck() { sudo $(history -p \!\!); }
+
+set_prompt() {
+	last_exitcode="$?"
+
+	declare checkmark fancy_x timestamp git_prompt_msg git_status_short git_status_colour git_unstaged git_untracked
+
+#	Doesn't work on some of the machines I use.
+#	checkmark='\342\234\223'
+#	fancy_x='\342\234\227'
+
+	PS1="${c_reset}"
+
+	# Set a fancy symbol to indicate the last exitcode
+	if (( last_exitcode )); then
+		last_exitcode_indicator="${c_red}!${c_reset}"
+	else
+		last_exitcode_indicator="${c_green}.${c_reset}"
+	fi
+
+	# Set the username colour
+	if (( UID )); then
+		user_colour="${c_green}"
+		user_indicator='$'
+	else
+		user_colour="${c_red}"
+		user_indicator='#'
+	fi
+
+	user_indicator='>'
+
+	# Set the git prompt message
+	git rev-parse --git-dir &>/dev/null && {
+		git_current_branch="$(git rev-parse --abbrev-ref HEAD)"
+		
+		while read; do
+			case "$REPLY" in
+				(' M'*|A*|D*) git_unstaged=1;;
+				(\?\?*) git_untracked=1;;
+			esac
+		done < <( git status --short )
+
+		(( git_unstaged )) && {
+			git_status_short+='c'
+			git_status_colour="${c_red}"
+		}
+
+		(( git_untracked )) && {
+			git_status_short+='f'
+			git_status_colour="${c_red}"
+		}
+
+		git_status_short=${git_status_short:-ok}
+		git_status_colour=${git_status_colour:-"${c_green}"}
+
+		git_prompt_msg="(${c_cyan}$git_current_branch${c_reset}[${git_status_colour}${git_status_short}${c_reset}]) "
+	}
+
+	set_title "${USER}@${HOSTNAME}"
+
+	if [[ "$PWD" == "$HOME" ]]; then
+		prompt_pwd='~'
+	elif [[ "$PWD" =~ ^"$HOME" ]]; then
+		prompt_pwd="~/${PWD##*${HOME}/}"
+	else
+		prompt_pwd="$PWD"
+	fi
+
+	prompt=(
+		"$c_reset"
+		"[${last_exitcode_indicator}]"
+		"${user_colour}${USER}${c_reset}@${c_lightblue}${HOSTNAME}"
+		"$prompt_pwd"
+		"${git_prompt_msg}${user_colour}${user_indicator}"
+		"$c_reset"
+	)
+
+	PS1="${prompt[@]}"
+}
+
+newsh() {
+	local shebang target target_basename target_extension
+
+	target="$1"
+	target_basename="${target##*/}"
+	target_extension="${target_basename##*.}"
+
+	case "$target_extension" in
+		sh) shebang='#!/bin/sh';;
+		bash) shebang='#!/usr/bin/env bash';;
+	esac
+
+	[[ "$shebang" ]] || { shebang="$cfg_newsh_default_shebang"; }
+
+	[[ -e "$target" ]] && {
+		err "$target already exists!"
+		return 1
+	}
+
+	printf '%s\n\n' "$shebang" > "$target"
+	chmod 755 "$target"
+	"$EDITOR" "$target"
+}
+
+set_argv() {
+	declare arg opt c
+	declare -ag ARGV
+
+	while (( $# )); do
+		unset -v arg opt c
+
+		case "$1" in
+			(--) ARGV+=( "$1" ); break;;
+
+			(--*)
+				IFS='=' read arg opt <<< "$1"
+				ARGV+=( "$arg" )
+
+				[[ "$opt" ]] && {
+					ARGV+=( "$opt" )
+				}
+			;;
+
+			(-*)
+				while read -n1 c
+				do
+					case "$c" in
+						-|'') :;;
+						*) ARGV+=( "-$c" );;
+					esac
+				done <<< "$1"
+			;;
+
+			(*) ARGV+=( "$1" );;
+		esac
+		shift
+	done
+}
+
+err() { printf '%s\n' "$*"; }
+
+if_function() {
+	[[ $(type -t "$1") == 'function' ]]
+}

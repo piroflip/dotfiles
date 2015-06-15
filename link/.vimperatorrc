@@ -8,6 +8,9 @@ nnoremap K :tabnext<cr>
 nnoremap j 3j
 nnoremap k 3k
 
+nnoremap O :tabopen<space>
+nnoremap s :open<space>google<space>
+
 
 " youtube shortcuts
 nnoremap ,yp :stpause<cr>

@@ -21,6 +21,9 @@
     ~/.config/bash:
       create: true
       path: link/.config/bash
+    ~/.config/termite:
+      create: true
+      path: link/.config/termite
     ~/bin:
       create: true
       path: link/bin
