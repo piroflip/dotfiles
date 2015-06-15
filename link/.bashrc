@@ -1,74 +1,50 @@
-# github.com/rafi ~/.bashrc config
+# Do nothing if we're not in an interactive session
+[[ "$PS1" ]] || return
 
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
+# Show a message on any errors
+#trap 'trap_error' ERR
 
-# https://wiki.archlinux.org/index.php/RTorrent
-# Ctrl-s is often used for terminal control to stop screen output while Ctrl-q is used to
-# start it. These mappings may interfere with rTorrent. Check to see if these terminal
-# options are bound to a mapping:
-#   $ stty -a
-# Remove the ^S ^Q mappings
-stty stop undef
-stty start undef
+misc_config=( $HOME/.config/bash/* )
+misc_path=( "$HOME/.config/alternatives" "$HOME/bin" "$HOME/.local/bin" )
 
-# Bash options
-shopt -s cdspell        # autocorrects cd misspellings
-shopt -s checkwinsize   # update the value of LINES and COLUMNS after each command if altered
-shopt -s cmdhist        # save multi-line commands in history as single line
-shopt -s dotglob        # include dotfiles in pathname expansion
-shopt -s expand_aliases # expand aliases
-shopt -s extglob        # enable extended pattern-matching features
-shopt -s histreedit     # Add failed commands to the bash history
-shopt -s histappend     # Append each session's history to $HISTFILE
-shopt -s autocd         # Autocd
+# Source vte-specific config
+[[ "$TERM" == 'xterm-termite' && -f '/etc/profile.d/vte.sh' ]] && {
+	source /etc/profile.d/vte.sh
+}
 
-export HISTSIZE=2000
-export HISTFILESIZE=50000
-export HISTFILE="$XDG_CACHE_HOME/bash_history"
-export HISTCONTROL=ignoreboth
-export VISUAL=vim
-export EDITOR="$VISUAL"
-export PAGER=less
+# Source external configs
+for i in "${misc_config[@]}"; do
+	source "$i" || { err "Failed to source $i!"; }
+done
 
-source "$XDG_CONFIG_HOME/bash/aliases"
+# Add custom PATH entries
+for i in "${misc_path[@]}"; do
+	[[ -d "$i" ]] && { MISCPATH+="$i:"; }
+done
+export PATH="${MISCPATH}${PATH}"
 
-# Source all extra functions
-for f in $XDG_CONFIG_HOME/bash/functions.d/*; do source "$f"; done
+# BASH options
+bash_opts=(
+	'checkwinsize' 'histappend' 'autocd'
+	'checkhash'
+)
+shopt -s "${bash_opts[@]}"
+shopt -u sourcepath
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-	# OSX GNU bash-completion
-	if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
-		source /opt/local/etc/profile.d/bash_completion.sh
-	fi
-	# Edit the /opt/X11/lib/X11/fontconfig/fonts.conf and added the directory
-	# "/Library/Fonts" to the font directory list
-#	export FONTCONFIG_PATH=/opt/X11/lib/X11/fontconfig
-fi
+PROMPT_COMMAND='set_prompt'
 
-# Git prompt helpers
-export GIT_PS1_SHOWDIRTYSTATE=1
-export GIT_PS1_SHOWSTASHSTATE=1
-export GIT_PS1_SHOWCOLORHINTS=0
-if [ -d $PREFIX/share/git/completion ]; then
-	source $PREFIX/share/git/completion/git-prompt.sh
-#	source $PREFIX/share/git/contrib/completion/git-completion.bash
-fi
+HISTCONTROL="$HISTCONTROL${HISTCONTROL+,}ignoredups"
+HISTCONTROL='ignoreboth'
 
-# If this is an xterm/rxvt/screen/tmux set the window title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*|screen*)
-	# Show a "user@host: /dir" in terminal title
-	PROMPT_COMMAND='history -a; echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD}\007"'
-	;;
-*)
-	;;
-esac
+# Environment
+export LC_ALL='en_US.UTF-8'
+export EDITOR='vim'
 
-# Load a command prompt theme
-source $XDG_CONFIG_HOME/bash/themes/current
+#export TERM='xterm-256color'
+export COLORTERM='xterm-256color'
 
-# Load directory and file colors
-eval $(dircolors -b "$XDG_CONFIG_HOME/bash/dircolors")
+# Specific to this setup
+alias dotfiles_pull='git -C ~/.dotfiles pull'
+alias dotfiles_push='git -C ~/.dotfiles commit -a; git -C ~/.dotfiles push'
 
-# vim: set ts=2 sw=2 tw=80 noet :
+cfg_newsh_default_shebang='#!/usr/bin/env bash'
