@@ -1,19 +1,31 @@
-#! /bin/sh
+#!/usr/bin/env bash
 
-bspc config border_width        2
-bspc config window_gap          0
+source "$HOME/.config/bspwm/common"
 
-bspc config split_ratio         0.52
-bspc config borderless_monocle  true
-bspc config gapless_monocle     true
-bspc config focus_by_distance   true
+xsetroot -cursor_name left_ptr
 
-bspc monitor -d 1 2 3 4 5 6 7 8 9
+bspc config focused_border_color            "#$colour_bg_focused"
+bspc config normal_border_color             "#$colour_bg_normal"
+bspc config urgent_border_color             "#$colour_urgent"
+bspc config focused_sticky_border_color     "#$colour_sticky_focused"
+bspc config top_padding                     "$(( panel_h + bspwm_window_gap ))"
+bspc config border_width                    "$bspwm_border_width"
+bspc config window_gap                      "$bspwm_window_gap"
 
-bspc rule -a Firefox desktop=^8
+bspc config split_ratio                     '0.50'
+bspc config borderless_monocle              'false'
+bspc config gapless_monocle                 'false'
+bspc config focus_by_distance               'true'
+bspc config ignore_ewmh_focus               'true'
+#bspc config initial_polarity                'second_child'
+
+bspc monitor -d                             1 2 3 4 5 6 7 8 9
+
+bspc rule -a Firefox     desktop=^8
 bspc rule -a qutebrowser desktop=^7
-bspc rule -a feh floating=on
-bspc rule -a pavucontrol floating=on
-bspc rule -a nitrogen floating=on center=true
+bspc rule -a feh                    floating=on
+bspc rule -a Mplayer                floating=on
+bspc rule -a pavucontrol            floating=on
+bspc rule -a nitrogen               floating=on center=true
 
- ${HOME}/.config/bspwm/panel
+${HOME}/.config/bspwm/panel

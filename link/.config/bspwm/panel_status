@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+source "$HOME/.config/bspwm/common"
+
+status::volume() {
+	while true; do
+		printf 'volume::[ Vol %s%% ]\n' "$(ponymix get-volume)"
+		sleep 1
+	done
+}
+
+status::date() {
+	while true; do
+		printf 'date::[ %s ]\n' "$(date '+%a,%e / %H:%M')"
+		sleep 1
+	done
+}
+
+status::updates() {
+	declare pkgs
+
+	while true; do
+		pkgs=( $(pacman -Qqu) )
+		pkgs_n=${#pkgs[@]}
+
+		if (( pkgs_n )); then
+			printf 'updates::[ Updates: %s ]\n' "${#pkgs[@]}"
+		else
+			printf 'updates::[ No updates ]\n'
+		fi
+
+		sleep 5
+	done
+}
+
+cleanup() {
+	kill $(jobs -p)
+}
+
+rexec() {
+	kill $(jobs -p)
+	exec "$0"
+}
+
+main() {
+	declare msg date
+
+	trap cleanup EXIT TERM INT
+	trap rexec HUP
+
+	modules=( date updates volume )
+
+	for i in "${modules[@]}"; do
+		"status::${i}" > "$panel_fifo" &
+	done
+
+	wait
+}
+
+main

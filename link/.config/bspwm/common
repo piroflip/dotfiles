@@ -1,0 +1,45 @@
+# vim: ft=sh
+# common config
+colour_fg_normal='f9f9f9'
+colour_fg_focused=$colour_fg_normal
+colour_bg_normal='2d2d2d'
+colour_bg_focused='00612b'
+#colour_fg_normal_alpha='00'
+#colour_fg_focused_alpha=$colour_fg_normal_alpha
+#colour_bg_normal_alpha='00'
+#colour_bg_focused_alpha='00'
+
+colour_urgent='610000'
+colour_sticky_focused='030061'
+
+fontspec='-*-terminesspowerline-medium-*-normal-*-14-*-*-*-*-*-iso10646-*'
+
+# bspwm config
+bspwm_border_width='1'
+bspwm_window_gap='3'
+
+# root win
+IFS='x' read -r root_win_w root_win_h < <( xwininfo -root | awk '/geometry/ { split($2,g,"+"); printf("%s", g[1]) }' )
+
+# panel config
+panel_bg_normal="${colour_bg_normal_alpha}${colour_bg_normal}"
+panel_bg_focused="${colour_bg_focused_alpha}${colour_bg_focused}"
+panel_fg_normal="${colour_fg_normal_alpha}${colour_fg_normal}"
+panel_fg_focused="${colour_fg_focused_alpha}${colour_fg_focused}"
+panel_fifo="/tmp/panel${DISPLAY}-fifo"
+panel_h='14'
+panel_w=$(( root_win_w - ( bspwm_window_gap * 2 ) ))
+panel_show_empty_tags=0
+
+# dmenu config
+## dmenu in teh center of the screen
+#dmenu_h=$panel_h
+#dmenu_w=$(( ( root_win_w / 3 ) * 2 ))
+#dmenu_x=$(( ( root_win_w / 2 ) - ( dmenu_w / 2 ) ))
+#dmenu_y=$(( ( root_win_h / 2 ) - ( dmenu_h / 2 ) ))
+
+## dmenu in place of bar
+#dmenu_w=$panel_w
+#dmenu_h=$panel_h
+#dmenu_x=$bspwm_window_gap
+#dmenu_y=$bspwm_window_gap

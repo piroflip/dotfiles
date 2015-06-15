@@ -5,7 +5,7 @@ xmodmap ~/.Xmodmap
 
 #redshift -l 55.6:37.6 -t 5500:4500
 
-unclutter &
+unclutter -idle 1 &
 xsetroot -cursor_name left_ptr
 xset +fp /usr/share/fonts/local
 nitrogen --restore &

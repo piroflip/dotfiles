@@ -8,6 +8,7 @@
     ~/.bashrc:    link/.bashrc
     ~/.profile:   link/.profile
     ~/.vimrc:     link/.vimrc
+    ~/.zshrc:     link/.zshrc
     ~/.vimperatorrc:   link/.vimperatorrc
     ~/.config/bspwm:
       create: true
@@ -24,6 +25,9 @@
     ~/.config/termite:
       create: true
       path: link/.config/termite
+    ~/.config/zsh:
+      create: true
+      path: link/.config/zsh
     ~/bin:
       create: true
       path: link/bin
