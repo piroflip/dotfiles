@@ -25,6 +25,7 @@ bspc rule -a Firefox     desktop=^8
 bspc rule -a qutebrowser desktop=^7
 bspc rule -a feh                    floating=on
 bspc rule -a Mplayer                floating=on
+bspc rule -a VirtualBox             floating=on
 bspc rule -a pavucontrol            floating=on
 bspc rule -a nitrogen               floating=on center=true
 

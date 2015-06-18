@@ -58,6 +58,7 @@ NeoBundle 'Shougo/unite.vim'
 " Colorschemes
 NeoBundle 'tomasr/molokai'
 NeoBundle 'joedicastro/vim-molokai256'
+NeoBundle 'altercation/vim-colors-solarized'
 "
 
 " Auto install the plugins {{{
@@ -199,7 +200,9 @@ set term=screen-256color
 syntax on
 set background=dark
 set t_Co=256
-colorscheme molokai256
+let g:solarized_termcolors=256
+" colorscheme molokai256
+colorscheme solarized
 
 " Highlight VCS conflict markers
 match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
@@ -223,6 +226,8 @@ map gd :bd<CR>
 
 " remap escape; this rox
 imap jj <Esc>
+
+nnoremap ; :
 
 " Clean trailing whitespace
 nnoremap <leader>ww mz:%s/\s\+$//<cr>:let @/=''<cr>`z
@@ -387,6 +392,12 @@ augroup END
 
 " }}}
 
+" vimperatorrc {{{
+
+au BufNewFile,BufRead *vimperatorrc*,*.vimp setfiletype vim
+
+" }}}
+
 " }}}
 " Plugin settings --------------------------------------------------------- {{{
 " Ack {{{
@@ -426,10 +437,11 @@ let NERDTreeMapJumpFirstChild = 'gK'
 
 set noshowmode
 
-let g:airline_theme='powerlineish'
-let g:airline_enable_branch=1
-let g:airline_powerline_fonts=0
-let g:airline_detect_whitespace = 1
+let g:airline_theme='solarized'
+" let g:airline_theme='powerlineish'
+let g:airline#extensions#branch#enabled = 1
+let g:airline_powerline_fonts=1
+let g:airline#extensions#whitespace#enabled = 1
 let g:airline#extensions#hunks#non_zero_only = 1
 
 " let g:airline#extensions#tabline#enabled = 2
@@ -451,10 +463,11 @@ endif
 
 let g:unite_source_history_yank_enable = 1
 nnoremap [unite]y :Unite -buffer-name=yank    -no-split               history/yank<cr>
-nnoremap [unite]b :Unite -buffer-name=buffers -no-split -start-insert buffer<cr>
+nnoremap [unite]b :Unite -buffer-name=buffers -no-split               buffer<cr>
 nnoremap [unite]f :Unite -buffer-name=files   -no-split -start-insert file_rec/async<cr>
 nnoremap [unite]* :UniteWithCursorWord grep:.<cr>
 nnoremap [unite]/ :Unite grep:.<cr>
+nnoremap [unite]r :UniteResume<cr>
 
 
 " }}}
