@@ -36,3 +36,7 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export LESSCHARSET=utf-8
+
+export WATCOM=c:\\\\tools\\\\w10
+export BCPATH=c:\\\\tools\\\\bc
+export BC2PATH=c:\\\\tools\\\\bc2

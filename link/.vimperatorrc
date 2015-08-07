@@ -40,6 +40,8 @@ qmark f https://www.facebook.com/
 qmark g https://github.com/
 qmark t https://twitter.com/
 qmark h https://news.ycombinator.com/
+qmark a about:addons
+qmark 2 https://2ch.hk/b
 " }}}
 " ==============================
 "
