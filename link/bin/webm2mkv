@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for i in *.webm
+do
+  ffmpeg -i "$i" -acodec copy -vcodec copy "${i%.webm}.mkv"
+done

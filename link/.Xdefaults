@@ -7,8 +7,8 @@ Xft.hintstyle: hintslight
 !Xft.lcdfilter: lcddefault
 Xft.background: #cccccc
 
-URxvt*font:             xft:Terminus:size=18
-URxvt*boldFont:         xft:Terminus:size=18:bold
+URxvt*font:             xft:Terminus:size=14
+URxvt*boldFont:         xft:Terminus:size=14:bold
 
 URxvt*background:       Black
 URxvt*foreground:       White

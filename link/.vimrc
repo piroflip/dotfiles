@@ -29,15 +29,15 @@ call neobundle#begin(expand($HOME.'/.vim/bundle/'))
 " is better if NeoBundle rules NeoBundle (needed!)
 NeoBundle 'Shougo/neobundle.vim'
 " }}}
-
+NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'vcscommand.vim'
 NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'bling/vim-airline'
+" NeoBundle 'bling/vim-airline'
 " File explorer (needed where ranger is not available)
 NeoBundleLazy 'Shougo/vimfiler', {'autoload' : { 'commands' : ['VimFiler']}}
 NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources': ['file_mru', 'directory_mru']}}
 " Autocompletion
-" NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'Shougo/neocomplete.vim'
 
 "NeoBundle 'Valloric/YouCompleteMe', {
 "      \ 'build' : {
@@ -57,6 +57,7 @@ NeoBundle 'Shougo/vimproc', {
 NeoBundle 'Shougo/unite.vim'
 " Colorschemes
 NeoBundle 'tomasr/molokai'
+NeoBundle 'xero/sourcerer.vim'
 NeoBundle 'joedicastro/vim-molokai256'
 NeoBundle 'altercation/vim-colors-solarized'
 "
@@ -242,21 +243,6 @@ map <silent><leader>hl :set invhlsearch<CR>
 
 " Toggle [i]nvisible characters
 nnoremap <leader>i :set list!<cr>
-
-command! -complete=file -nargs=+ Svn :!svn <args>
-
-command! -complete=file -nargs=+ SvnDiff call SubversionDiff(<q-args>)
-
-function! SubversionDiff(args)
-  let targetFilename = expand("%")
-  let tempFilename = expand("%:t")
-  exe 'split "/tmp/diff_' . tempFilename . '"'
-  " Empty the file of any previous diff contents
-  exe "normal ggVGx"
-  exe "silent read! svn diff" . a:args
-  exe "set syntax=diff"
-  exe "normal gg"
-endfun
 
 " }}}
 " Quick editing ----------------------------------------------------------- {{{
@@ -464,19 +450,29 @@ endif
 let g:unite_source_history_yank_enable = 1
 nnoremap [unite]y :Unite -buffer-name=yank    -no-split               history/yank<cr>
 nnoremap [unite]b :Unite -buffer-name=buffers -no-split               buffer<cr>
-nnoremap [unite]f :Unite -buffer-name=files   -no-split -start-insert file_rec/async<cr>
+nnoremap [unite]f :Unite -buffer-name=files   -no-split -start-insert file_rec/async:!<cr>
 nnoremap [unite]* :UniteWithCursorWord grep:.<cr>
 nnoremap [unite]/ :Unite grep:.<cr>
 nnoremap [unite]r :UniteResume<cr>
-
+nnoremap [unite]m :Unite -buffer-name=mru              -start-insert file_mru<cr>
 
 " }}}
-
 " Neocomplete {{{
 
 
 " }}}
-
+" Lightline {{{
+  set laststatus=2
+  let g:lightline = {
+    \ 'active': {
+    \   'left': [ [ 'filename' ],
+    \             [ 'readonly', 'fugitive' ] ],
+    \   'right': [ [ 'percent', 'lineinfo' ],
+    \              [ 'fileencoding', 'filetype' ],
+    \              [ 'fileformat', 'syntastic' ] ]
+    \ }
+    \ }
+" }}}
 " }}}
 
 autocmd! bufwritepost .vimrc source %

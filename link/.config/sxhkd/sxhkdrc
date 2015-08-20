@@ -3,7 +3,7 @@
 #
 
 super + alt + Escape
-	bspc quit
+	bspc quit; pkill -TERM -f panel
 
 super + z
 	bspc window -c
@@ -96,7 +96,10 @@ super + x
 	urxvtc -e ranger
 
 super + r
-	dmenu_bind.sh
+	interrobang
+
+#super + r
+#	dmenu_bind.sh
 
 ctrl + alt + Delete
     urxvtc -e htop

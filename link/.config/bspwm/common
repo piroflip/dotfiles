@@ -15,8 +15,8 @@ colour_sticky_focused='030061'
 fontspec='-*-terminesspowerline-medium-*-normal-*-14-*-*-*-*-*-iso10646-*'
 
 # bspwm config
-bspwm_border_width='1'
-bspwm_window_gap='3'
+bspwm_border_width='3'
+bspwm_window_gap='15'
 
 # root win
 IFS='x' read -r root_win_w root_win_h < <( xwininfo -root | awk '/geometry/ { split($2,g,"+"); printf("%s", g[1]) }' )
@@ -29,7 +29,7 @@ panel_fg_focused="${colour_fg_focused_alpha}${colour_fg_focused}"
 panel_fifo="/tmp/panel${DISPLAY}-fifo"
 panel_h='14'
 panel_w=$(( root_win_w - ( bspwm_window_gap * 2 ) ))
-panel_show_empty_tags=0
+panel_show_empty_tags=1
 
 # dmenu config
 ## dmenu in teh center of the screen

@@ -9,6 +9,8 @@
     ~/.profile:   link/.profile
     ~/.vimrc:     link/.vimrc
     ~/.zshrc:     link/.zshrc
+    ~/.zprofile:  link/.zprofile
+    ~/.interrobangrc:  link/.interrobangrc
     ~/.vimperatorrc:   link/.vimperatorrc
     ~/.config/bspwm:
       create: true
@@ -31,4 +33,7 @@
     ~/bin:
       create: true
       path: link/bin
+    ~/.config/herbstluftwm:
+      create: true
+      path: link/.config/herbstluftwm
 

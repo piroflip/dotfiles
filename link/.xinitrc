@@ -11,5 +11,6 @@ xset +fp /usr/share/fonts/local
 nitrogen --restore &
 urxvtd -q -f -o &
 firefox &
-sxhkd &
-exec bspwm &>~/bspwm.log
+#sxhkd &
+#exec bspwm &>~/bspwm.log
+exec herbstluftwm &>~/herbstluft.log
