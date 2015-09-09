@@ -38,6 +38,8 @@ NeoBundleLazy 'Shougo/vimfiler', {'autoload' : { 'commands' : ['VimFiler']}}
 NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources': ['file_mru', 'directory_mru']}}
 " Autocompletion
 NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
 
 "NeoBundle 'Valloric/YouCompleteMe', {
 "      \ 'build' : {
@@ -243,6 +245,9 @@ map <silent><leader>hl :set invhlsearch<CR>
 
 " Toggle [i]nvisible characters
 nnoremap <leader>i :set list!<cr>
+
+" Toggle paste mode on and off
+map <leader>pp :setlocal paste!<cr>
 
 " }}}
 " Quick editing ----------------------------------------------------------- {{{
@@ -472,6 +477,25 @@ nnoremap [unite]m :Unite -buffer-name=mru              -start-insert file_mru<cr
     \              [ 'fileformat', 'syntastic' ] ]
     \ }
     \ }
+" }}}
+" Lightline {{{
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<TAB>" : "\<Plug>(neosnippet_expand_or_jump)"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
 " }}}
 " }}}
 
