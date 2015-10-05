@@ -29,10 +29,9 @@ call neobundle#begin(expand($HOME.'/.vim/bundle/'))
 " is better if NeoBundle rules NeoBundle (needed!)
 NeoBundle 'Shougo/neobundle.vim'
 " }}}
+NeoBundle 'Shougo/unite.vim'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'vcscommand.vim'
-NeoBundle 'scrooloose/nerdtree'
-" NeoBundle 'bling/vim-airline'
 " File explorer (needed where ranger is not available)
 NeoBundleLazy 'Shougo/vimfiler', {'autoload' : { 'commands' : ['VimFiler']}}
 NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources': ['file_mru', 'directory_mru']}}
@@ -40,13 +39,17 @@ NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources': ['file_mru', 'd
 NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'Shougo/vimshell'
+call neobundle#config('vimshell', {
+      \ 'lazy' : 1,
+      \ 'autoload' : {
+      \   'commands' : [{ 'name' : 'VimShell',
+      \                   'complete' : 'customlist,vimshell#complete'},
+      \                 'VimShellExecute', 'VimShellInteractive',
+      \                 'VimShellTerminal', 'VimShellPop'],
+      \   'mappings' : ['<Plug>(vimshell_switch)']
+      \ }})
 
-"NeoBundle 'Valloric/YouCompleteMe', {
-"      \ 'build' : {
-"      \     'unix' : 'bash install.sh',
-"      \    },
-"      \ }
-"
 " Vimproc to asynchronously run commands (NeoBundle, Unite)
 NeoBundle 'Shougo/vimproc', {
       \ 'build' : {
@@ -56,7 +59,7 @@ NeoBundle 'Shougo/vimproc', {
       \     'unix' : 'make -f make_unix.mak',
       \    },
       \ }
-NeoBundle 'Shougo/unite.vim'
+NeoBundle 'scrooloose/nerdcommenter'
 " Colorschemes
 NeoBundle 'tomasr/molokai'
 NeoBundle 'xero/sourcerer.vim'
@@ -146,7 +149,7 @@ augroup END
 set tabstop=8
 set shiftwidth=2
 set softtabstop=2
-set noexpandtab
+set expandtab
 set nowrap
 set textwidth=80
 set formatoptions=qrn1j
@@ -397,31 +400,12 @@ nnoremap <leader>a :Ack!<space>
 let g:ackprg = '/usr/bin/vendor_perl/ack --smart-case --nogroup --nocolor --column'
 
 " }}}
-" NERD Tree {{{
+" NERDCommenter {{{
 
-noremap  <leader>d :NERDTreeToggle<cr>
-inoremap <leader>d <esc>:NERDTreeToggle<cr>
-
-augroup ps_nerdtree
-    au!
-
-    au Filetype nerdtree setlocal nolist
-    au Filetype nerdtree nnoremap <buffer> H :vertical resize -10<cr>
-    au Filetype nerdtree nnoremap <buffer> L :vertical resize +10<cr>
-    " au Filetype nerdtree nnoremap <buffer> K :q<cr>
-augroup END
-
-let NERDTreeHighlightCursorline = 1
-let NERDTreeIgnore = ['.vim$', '\~$', '.*\.pyc$', 'pip-log\.txt$', 'whoosh_index',
-                    \ 'xapian_index', '.*.pid', 'monitor.py', '.*-fixtures-.*.json',
-                    \ '.*\.o$', 'db.db', 'tags.bak', '.*\.pdf$', '.*\.mid$',
-                    \ '.*\.midi$']
-
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-let NERDChristmasTree = 1
-let NERDTreeChDirMode = 2
-let NERDTreeMapJumpFirstChild = 'gK'
+let NERDSpaceDelims=1
+let g:NERDCustomDelimiters = {
+    \ 'c': { 'leftAlt': '//','rightAlt': '', 'left': '//', 'right': '' },
+\ }
 
 " }}}
 " Airline {{{
@@ -445,18 +429,39 @@ let g:airline#extensions#hunks#non_zero_only = 1
 nmap [unite] <Nop>
 nmap <leader> [unite]
 
-if executable('ag')
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts =  '--line-numbers --nocolor --nogroup --hidden '
+if executable('ack')
+  " Use ack in unite grep source.
+  let g:unite_source_grep_command = 'ack'
+  let g:unite_source_grep_default_opts =
+        \ '-i --no-heading --no-color -k -H'
   let g:unite_source_grep_recursive_opt = ''
-  let g:unite_source_grep_encoding = 'cp866'
+elseif executable('jvgrep')
+  " For jvgrep.
+  let g:unite_source_grep_command = 'jvgrep'
+  let g:unite_source_grep_default_opts =
+        \ '-i --exclude ''\.(git|svn|hg|bzr)'''
+  let g:unite_source_grep_recursive_opt = '-R'
+elseif executable('ag')
+  " Use ag in unite grep source.
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts =
+        \ '-i --search-binary --vimgrep --hidden --ignore ' .
+        \ '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+  let g:unite_source_grep_recursive_opt = ''
+elseif executable('pt')
+  " Use pt in unite grep source.
+  " https://github.com/monochromegane/the_platinum_searcher
+  let g:unite_source_grep_command = 'pt'
+  let g:unite_source_grep_default_opts = '--nogroup --nocolor'
+  let g:unite_source_grep_recursive_opt = ''
 endif
+let g:unite_source_grep_encoding = 'cp866'
 
 let g:unite_source_history_yank_enable = 1
-nnoremap [unite]y :Unite -buffer-name=yank    -no-split               history/yank<cr>
+nnoremap [unite]y :Unite -buffer-name=yank   -no-split register      history/yank<cr>
 nnoremap [unite]b :Unite -buffer-name=buffers -no-split               buffer<cr>
 nnoremap [unite]f :Unite -buffer-name=files   -no-split -start-insert file_rec/async:!<cr>
-nnoremap [unite]* :UniteWithCursorWord grep:.<cr>
+nnoremap [unite]* :UniteWithCursorWord -auto-preview grep:.<cr>
 nnoremap [unite]/ :Unite grep:.<cr>
 nnoremap [unite]r :UniteResume<cr>
 nnoremap [unite]m :Unite -buffer-name=mru              -start-insert file_mru<cr>
@@ -464,6 +469,17 @@ nnoremap [unite]m :Unite -buffer-name=mru              -start-insert file_mru<cr
 " }}}
 " Neocomplete {{{
 
+let g:neocomplete#enable_at_startup = 1
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplete#close_popup() . "\<CR>"
+  " For no inserting <CR> key.
+  return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " }}}
 " Lightline {{{
@@ -478,7 +494,12 @@ nnoremap [unite]m :Unite -buffer-name=mru              -start-insert file_mru<cr
     \ }
     \ }
 " }}}
-" Lightline {{{
+" VimFiler {{{
+nnoremap [unite]d :VimFilerBufferDir -buffer-name=explorer -simple -toggle -force-quit<cr>
+nnoremap ` :<C-u>VimFilerBufferDir -buffer-name=explorer -toggle -force-quit<cr>
+
+" }}}
+" Neosnippet {{{
 " Plugin key-mappings.
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
@@ -505,3 +526,4 @@ autocmd! bufwritepost .vimrc source %
 
 "============== SHIT
 
+nmap <C-@>  <Plug>(vimshell_switch)

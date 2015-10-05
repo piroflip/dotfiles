@@ -33,6 +33,9 @@
     ~/bin:
       create: true
       path: link/bin
+    ~/start:
+      create: true
+      path: link/start
     ~/.config/herbstluftwm:
       create: true
       path: link/.config/herbstluftwm

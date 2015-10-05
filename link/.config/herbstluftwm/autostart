@@ -24,13 +24,13 @@ hc keybind $Mod-F10 spawn amixer set Master 100%-
 hc keybind $Mod-y   spawn slimlock
 
 # run menu
-hc keybind $Mod-w	spawn interrobang
 hc keybind $Mod-r	spawn interrobang
 
 hc keybind $Mod-Shift-q quit
 hc keybind $Mod-Shift-r reload
 hc keybind $Mod-z close
 hc keybind $Mod-Return spawn termite
+hc keybind $Mod-w spawn firefox
 
 # basic movement
 # focusing clients
@@ -154,6 +154,7 @@ hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 
 hc rule class=Firefox tag=8 # move all firefox to tag 3
+hc rule class=vncviewer pseudotile=on
 
 # unlock, just to be sure
 hc unlock
