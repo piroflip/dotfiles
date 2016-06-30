@@ -39,4 +39,7 @@
     ~/.config/herbstluftwm:
       create: true
       path: link/.config/herbstluftwm
+    ~/.config/nvim:
+      create: true
+      path: link/.config/nvim
 

@@ -23,14 +23,17 @@ hc keybind $Mod-F12 spawn amixer set Master 5%+
 hc keybind $Mod-F10 spawn amixer set Master 100%-
 hc keybind $Mod-y   spawn slimlock
 
+hc keybind $Mod-Print spawn scrot -d 3 '%Y-%m-%d_%H-%M-%S.png' -e 'mv $f ~/screenshots/'
+
 # run menu
-hc keybind $Mod-r	spawn interrobang
+hc keybind $Mod-r	spawn dmenu_run_hlwm
 
 hc keybind $Mod-Shift-q quit
 hc keybind $Mod-Shift-r reload
 hc keybind $Mod-z close
 hc keybind $Mod-Return spawn termite
 hc keybind $Mod-w spawn firefox
+hc keybind $Mod-e spawn thunar
 
 # basic movement
 # focusing clients
@@ -90,7 +93,7 @@ hc keybind $Mod-period use_index +1 --skip-visible
 hc keybind $Mod-comma  use_index -1 --skip-visible
 
 # layouting
-#hc keybind $Mod-r remove
+hc keybind $Mod-d remove
 hc keybind $Mod-space cycle_layout 1
 hc keybind $Mod-s floating toggle
 hc keybind $Mod-f fullscreen toggle
@@ -136,7 +139,7 @@ hc attr theme.active.inner_color '#3E4A00'
 hc attr theme.active.outer_color '#3E4A00'
 hc attr theme.background_color '#141414'
 
-hc set window_gap 25
+hc set window_gap 5
 hc set frame_padding 0
 hc set smart_window_surroundings 0
 hc set smart_frame_surroundings 1
@@ -153,8 +156,14 @@ hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' pseudotile=on
 hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 
+hc rule windowrole="GtkFileChooserDialog" pseudotile=on
 hc rule class=Firefox tag=8 # move all firefox to tag 3
 hc rule class=vncviewer pseudotile=on
+
+imtag=9
+hc load "$imtag" '(split horizontal:0.800000:0 (clients grid:0) (clients vertical:0))'
+hc rule class=Pidgin   windowrole=buddy_list tag=$imtag index=1 focus=off
+hc rule class=Pidgin ! windowrole=buddy_list tag=$imtag index=0
 
 # unlock, just to be sure
 hc unlock

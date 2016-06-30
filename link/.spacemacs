@@ -23,8 +23,12 @@
             :variables auto-completion-enable-company-help-tooltip t)
      ;; markdown
      ;; org
+     ranger
      lua
      dash
+     (shell :variables
+            shell-default-shell 'term
+            shell-default-term-shell "/bin/zsh")
      ;;syntax-checking
      c-c++
      themes-megapack
@@ -67,7 +71,6 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(monokai
-                         solarized-light
                          solarized-dark
                          leuven
                          monokai
@@ -78,7 +81,7 @@ before layers configuration."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Terminus"
-                               :size 20
+                               :size 16
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)

@@ -38,10 +38,38 @@ NeoBundle 'rhysd/conflict-marker.vim'
 NeoBundleLazy 'Shougo/vimfiler', {'autoload' : { 'commands' : ['VimFiler']}}
 NeoBundleLazy 'Shougo/neomru.vim' ", {'autoload':{'unite_sources': ['file_mru', 'directory_mru']}}
 " Autocompletion
-NeoBundle 'Shougo/neocomplete.vim'
+
+NeoBundle 'Shougo/deoplete.nvim'
+if neobundle#tap("deoplete.nvim")
+        let s:hooks = neobundle#get_hooks("deoplete.nvim")
+        function! s:hooks.on_source(bundle)
+          let g:deoplete#enable_at_startup = 1
+          let g:deoplete#enable_ignore_case = 1
+          let g:deoplete#enable_smart_case = 1
+          let g:deoplete#enable_fuzzy_completion = 1
+          " <TAB>: completion.
+          imap <silent><expr> <TAB>
+                \ pumvisible() ? "\<C-n>" :
+                \ <SID>check_back_space() ? "\<TAB>" :
+                \ deoplete#mappings#manual_complete()
+          function! s:check_back_space() abort "{{{
+            let col = col('.') - 1
+            return !col || getline('.')[col - 1]  =~ '\s'
+          endfunction"}}}
+
+          " <S-TAB>: completion back.
+          inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
+
+          " <C-h>, <BS>: close popup and delete backword char.
+          inoremap <expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
+          inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
+        endf
+endif
+
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/vimshell'
+
 
 call neobundle#config('vimshell', {
       \ 'lazy' : 1,
@@ -223,12 +251,10 @@ map <F8> :emenu Encoding.
 map <leader>en :emenu Encoding.
 " }}}
 " Color scheme {{{
-set term=xterm-256color
-syntax on
 set background=dark
 set t_Co=256
 let g:solarized_termcolors=256
-" colorscheme badwolf
+" colorscheme molokai256
 colorscheme solarized
 
 " Highlight VCS conflict markers
@@ -293,6 +319,7 @@ map <leader>pp :setlocal paste!<cr>
 " Quick editing ----------------------------------------------------------- {{{
 
 nnoremap <leader>ev :e ~/.vimrc<cr>
+nnoremap <leader>ei :e ~/.config/nvim/init.vim<cr>
 nnoremap <leader>ea :e ~/.config/awesome/rc.lua<cr>
 nnoremap <leader>et :vsplit ~/.tmux.conf<cr>
 
@@ -513,21 +540,6 @@ nnoremap [unite]m :Unite -buffer-name=mru              -start-insert neomru/file
 nnoremap [unite]n :Unite -buffer-name=mru -default-action=lcd neomru/directory<CR>
 
 " }}}
-" Neocomplete {{{
-
-let g:neocomplete#enable_at_startup = 1
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-
-" }}}
 " Lightline {{{
   set laststatus=2
   let g:lightline = {
@@ -550,6 +562,8 @@ nmap <silent> vs :<C-u>VimShell<CR>
 nmap <silent> vp :<C-u>VimShellPop<CR>
 nmap <C-@>  <Plug>(vimshell_switch)
 " }}}
+" Deoplete {{{
+" }}}
 " Neosnippet {{{
 " Plugin key-mappings.
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
@@ -570,8 +584,6 @@ if has('conceal')
 endif
 " }}}
 " }}}
-
-autocmd! bufwritepost .vimrc source %
 
 " The prefix key.
 nnoremap [Quickfix]   <Nop>

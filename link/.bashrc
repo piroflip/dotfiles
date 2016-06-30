@@ -38,7 +38,7 @@ HISTCONTROL='ignoreboth'
 
 # Environment
 export LC_ALL='en_US.UTF-8'
-export EDITOR='vim'
+export EDITOR='nvim'
 
 #export TERM='xterm-256color'
 export COLORTERM='xterm-256color'
